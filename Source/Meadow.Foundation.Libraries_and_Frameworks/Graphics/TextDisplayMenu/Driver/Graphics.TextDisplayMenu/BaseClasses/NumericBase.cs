@@ -102,7 +102,10 @@ namespace Meadow.Foundation.Displays.TextDisplayMenu.InputTypes
 
         protected override void ParseValue(object value)
         {
-            if (value == null || value.ToString() == string.Empty) return;
+            if (value == null || value.ToString() == string.Empty)
+            {
+                return;
+            }
 
             string currentValue = value.ToString();
 
