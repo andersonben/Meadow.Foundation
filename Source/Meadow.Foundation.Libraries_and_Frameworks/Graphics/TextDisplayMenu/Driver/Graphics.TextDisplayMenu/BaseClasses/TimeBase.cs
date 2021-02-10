@@ -69,14 +69,15 @@ namespace Meadow.Foundation.Displays.TextDisplayMenu.InputTypes
             timeParts = new int[timeMode == TimeMode.HH_MM_SS ? 3 : 2];
             base.itemID = itemID;
             display.ClearLines();
-            display.WriteLine("Enter " + this.TimeModeDisplay, 0);
-            display.SetCursorPosition(0, 1);
+            display.WriteLine("Enter " + TimeModeDisplay, 0);
+            
+            //display.SetCursorPosition(0, 0);
 
             ParseValue(currentValue);
             UpdateInputLine(TimeDisplay);
         }
 
-        public override bool Next()
+        public override bool Previous()
         {
             int max = 0;
 
@@ -98,10 +99,10 @@ namespace Meadow.Foundation.Displays.TextDisplayMenu.InputTypes
         }
 
 
-        public override bool Previous()
+        public override bool Next()
         {
             int min = 0;
-            if (timeParts[position] > min) timeParts[position]--;
+            if (timeParts[position] > min) { timeParts[position]--; }
             UpdateInputLine(TimeDisplay);
 
             return true;
