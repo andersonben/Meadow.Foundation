@@ -1,5 +1,6 @@
 using Meadow.Hardware;
 using System.Threading;
+using System;
 
 namespace Meadow.Foundation.Displays.ePaper
 {
@@ -22,21 +23,21 @@ namespace Meadow.Foundation.Displays.ePaper
         protected override void Initialize()
         {
             Reset();
-
-            SendCommand(BOOSTER_SOFT_START);
-            SendData(0x17);
-            SendData(0x17);
-            SendData(0x17);
+          
+            SendCommand(BOOSTER_SOFT_START, new byte[] { 0x17, 0x17, 0x17 });
             SendCommand(POWER_ON);
 
             WaitUntilIdle();
-            SendCommand(0x0F);
+            SendCommand(PANEL_SETTING, 0x0F);
+            
 
-            SendCommand(RESOLUTION_SETTING);
-            SendData((byte)(Height >> 8) & 0xFF);
-            SendData((byte)(Height & 0xFF));
-            SendData((byte)(Width >> 8) & 0xFF);
-            SendData((byte)(Width & 0xFF));
+            SendCommand(RESOLUTION_SETTING,  new byte[] { (byte)((Width >> 8) & 0xFF),
+                                                (byte)(Width & 0xFF),
+                                                (byte)((Height >> 8) & 0xFF),
+                                                (byte)(Height & 0xFF) });
+
+            SendCommand(VCOM_AND_DATA_INTERVAL_SETTING, 0xF7);
+
         }
 
         protected void SetPartialWindow(byte[] bufferBlack, byte[] bufferColor, int x, int y, int width, int height)
@@ -176,21 +177,9 @@ namespace Meadow.Foundation.Displays.ePaper
         void DisplayFrame(byte[] blackBuffer, byte[] colorBuffer)
         {
             SendCommand(DATA_START_TRANSMISSION_1);
-            Thread.Sleep(2);
-
-            for (int i = 0; i < Width * Height / 8; i++)
-            {
-                SendData(blackBuffer[i]);
-            }
-            Thread.Sleep(2);
-
+            SendData(blackBuffer);
             SendCommand(DATA_START_TRANSMISSION_2);
-            Thread.Sleep(2);
-            for (int i = 0; i < Width * Height / 8; i++)
-            {
-                SendData(colorBuffer[i]);
-            }
-            Thread.Sleep(2);
+            SendData(colorBuffer);
 
             DisplayFrame();
         }

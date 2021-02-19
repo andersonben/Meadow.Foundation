@@ -20,32 +20,37 @@ namespace Displays.ePaper.IL0398_Sample
 
             Console.WriteLine("Create display driver instance");
             display = new Il0398(device: Device, spiBus: spiBus,
-                chipSelectPin: Device.Pins.D02,
-                dcPin: Device.Pins.D01,
-                resetPin: Device.Pins.D00,
-                busyPin: Device.Pins.D03,
+                chipSelectPin: Device.Pins.D12,
+                dcPin: Device.Pins.D13,
+                resetPin: Device.Pins.D14,
+                busyPin: Device.Pins.D15,
                 width: 400,
                 height: 300);
 
             var graphics = new GraphicsLibrary(display);
 
             //any color but black will show the ePaper alternate color 
-            graphics.DrawRectangle(1, 1, 126, 32, Meadow.Foundation.Color.Red, false);
+            graphics.DrawRectangle(0, 0, 399, 32, Meadow.Foundation.Color.Red, true);
+
+            display.SetPenColor(Meadow.Foundation.Color.Black);
 
             graphics.CurrentFont = new Font8x12();
-            graphics.DrawText(2, 2, "IL0398");
-            graphics.DrawText(2, 20, "Meadow F7");
+            graphics.DrawText(5, 5, "IL0398");
+            graphics.DrawText(5, 20, "Meadow F7");
+
+            graphics.CurrentFont = new Font12x20();
+            graphics.DrawText(180, 2, "Benjamin Anderson");
 
             int ySpacing = 6;
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 2; i++)
             {
-                graphics.DrawLine(2, 70 + ySpacing * i, 22, 50 + ySpacing * i, true);
-                graphics.DrawLine(22, 50 + ySpacing * i, 42, 70 + ySpacing * i, true);
-                graphics.DrawLine(44, 70 + ySpacing * i, 64, 50 + ySpacing * i, true);
-                graphics.DrawLine(64, 50 + ySpacing * i, 84, 70 + ySpacing * i, true);
-                graphics.DrawLine(86, 70 + ySpacing * i, 106, 50 + ySpacing * i, true);
-                graphics.DrawLine(106, 50 + ySpacing * i, 126, 70 + ySpacing * i, true);
+                graphics.DrawLine(0, 70 + ySpacing * i, 20, 50 + ySpacing * i, true);
+                graphics.DrawLine(20, 50 + ySpacing * i, 40, 70 + ySpacing * i, true);
+                graphics.DrawLine(40, 70 + ySpacing * i, 60, 50 + ySpacing * i, true);
+                graphics.DrawLine(60, 50 + ySpacing * i, 80, 70 + ySpacing * i, true);
+                graphics.DrawLine(80, 70 + ySpacing * i, 100, 50 + ySpacing * i, true);
+                graphics.DrawLine(100, 50 + ySpacing * i, 120, 70 + ySpacing * i, true);
             }
 
             Console.WriteLine("Show");

@@ -1,6 +1,7 @@
 using Meadow;
 using Meadow.Hardware;
 using System.Threading;
+using System;
 
 namespace Meadow.Foundation.Displays
 {
@@ -31,14 +32,17 @@ namespace Meadow.Foundation.Displays
 
         protected void Reset()
         {
+            resetPort.State = (true);
+            DelayMs(20);
             resetPort.State = (false);
-            DelayMs(200);
+            DelayMs(20);
             resetPort.State = (true);
             DelayMs(200);
         }
 
         protected void DelayMs(int millseconds)
         {
+            Console.WriteLine($"SPI Delay: Sleep {millseconds} {DateTime.Now}");
             Thread.Sleep(millseconds);
         }
 
@@ -46,6 +50,19 @@ namespace Meadow.Foundation.Displays
         {
             dataCommandPort.State = (Command);
             Write(command);
+        }
+        protected void SendCommand(byte command, byte data)
+        {
+            SendCommand(command);
+            SendData(data);
+
+        }
+
+        protected void SendCommand(byte command, byte[] data)
+        {
+            SendCommand(command);
+            SendData(data);
+
         }
 
         protected void SendData(int data)
@@ -67,11 +84,18 @@ namespace Meadow.Foundation.Displays
 
         protected virtual void WaitUntilIdle()
         {
-            int count = 0;
-            while (busyPort.State == false && count < 20)
+            Console.WriteLine("Wait till idle.");
+            if(!busyPort.State)
             {
-                DelayMs(50);
-                count++;
+                do
+                {
+                    SendCommand((byte)0x71);
+                    DelayMs(10);
+                } while (!busyPort.State);
+            }
+            else
+            {
+                DelayMs(500);
             }
         }
     }
