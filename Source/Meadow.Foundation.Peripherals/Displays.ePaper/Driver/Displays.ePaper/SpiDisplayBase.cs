@@ -42,7 +42,6 @@ namespace Meadow.Foundation.Displays
 
         protected void DelayMs(int millseconds)
         {
-            Console.WriteLine($"SPI Delay: Sleep {millseconds} {DateTime.Now}");
             Thread.Sleep(millseconds);
         }
 
@@ -55,14 +54,12 @@ namespace Meadow.Foundation.Displays
         {
             SendCommand(command);
             SendData(data);
-
         }
 
         protected void SendCommand(byte command, byte[] data)
         {
             SendCommand(command);
             SendData(data);
-
         }
 
         protected void SendData(int data)
@@ -84,7 +81,6 @@ namespace Meadow.Foundation.Displays
 
         protected virtual void WaitUntilIdle()
         {
-            Console.WriteLine("Wait till idle.");
             if(!busyPort.State)
             {
                 do
